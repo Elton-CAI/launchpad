@@ -741,7 +741,7 @@ const NAV_LABELS = {
   ae:       'My Board',
 };
 
-const SP_BASE = 'https://caisoft.sharepoint.com/sites/DM-Elton/Shared%20Documents/Boards/data';
+const SP_BASE = 'https://caisoft.sharepoint.com/sites/DM-Elton/Shared Documents/Boards/data';
 
 // ── OWNER MAP ─────────────────────────────────────────────────────────────────
 const OWNERS = {
@@ -809,7 +809,7 @@ function switchTab(board, tab) {
 // ── DATA FETCH ────────────────────────────────────────────────────────────────
 async function fetchData() {
   try {
-    const resp = await fetch(`${SP_BASE}/forecast_data.json?_=${Date.now()}`);
+    const resp = await fetch(`${SP_BASE}/forecast_data.json?_=${Date.now()}`, { credentials: "include", mode: "cors" });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     currentData = data;
