@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elton Cockpit</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:    #0D1117;
+    --navy2:   #161B22;
+    --navy3:   #1C2333;
+    --cyan:    #00D4FF;
+    --green:   #00E676;
+    --magenta: #E91E90;
+    --yellow:  #FFD600;
+    --red:     #EF4444;
+    --slate:   #CBD5E1;
+    --purple:  #6B21A8;
+    --text:    #F0F4FF;
+    --text2:   #8B9CC0;
+    --text3:   #4A5568;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── RAINBOW BAR ── */
+  .rainbow-bar {
+    height: 5px;
+    background: linear-gradient(90deg, #00D4FF 0%, #E91E90 25%, #FFD600 50%, #00E676 75%, #00D4FF 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy2);
+    border-bottom: 1px solid var(--navy3);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 5px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+  }
+
+  .wordmark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .wordmark-icon {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, var(--cyan), var(--magenta));
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+
+  .wordmark-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cyan);
+    letter-spacing: 0.5px;
+  }
+
+  .wordmark-sub {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .last-updated {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.5px;
+  }
+
+  .last-updated span {
+    color: var(--green);
+  }
+
+  .refresh-btn {
+    background: var(--navy3);
+    border: 1px solid var(--text3);
+    color: var(--text2);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .refresh-btn:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  .refresh-btn.spinning .refresh-icon { animation: spin 0.8s linear infinite; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── ROLE PILL ── */
+  .role-pill {
+    background: var(--navy3);
+    border: 1px solid var(--navy3);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text2);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--navy2);
+    border-bottom: 1px solid var(--navy3);
+    padding: 0 32px;
+    position: fixed;
+    top: 65px;
+    left: 0;
+    right: 0;
+    z-index: 998;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 44px;
+  }
+
+  .nav-item {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-item:hover {
+    color: var(--text);
+    background: var(--navy3);
+  }
+
+  .nav-item.active {
+    color: var(--cyan);
+    background: rgba(0, 212, 255, 0.08);
+    border-color: rgba(0, 212, 255, 0.2);
+  }
+
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .nav-separator {
+    width: 1px;
+    height: 20px;
+    background: var(--navy3);
+    margin: 0 8px;
+  }
+
+  /* ── MAIN CONTENT ── */
+  main {
+    margin-top: 114px;
+    padding: 28px 32px 60px;
+    min-height: calc(100vh - 114px);
+  }
+
+  /* ── BOARD PANEL ── */
+  .board-panel {
+    display: none;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .board-panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── BOARD TABS ── */
+  .board-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--navy3);
+    padding-bottom: 0;
+  }
+
+  .board-tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+  }
+
+  .board-tab:hover { color: var(--text); }
+  .board-tab.active { color: var(--magenta); border-bottom-color: var(--magenta); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+
+  /* ── METRIC CARDS ── */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .metric-card {
+    background: var(--navy2);
+    border: 1px solid var(--navy3);
+    border-radius: 10px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .metric-card:hover { border-color: var(--text3); }
+
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+
+  .metric-card.green::before { background: var(--green); }
+  .metric-card.magenta::before { background: var(--magenta); }
+  .metric-card.yellow::before { background: var(--yellow); }
+  .metric-card.cyan::before { background: var(--cyan); }
+
+  .metric-label {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .metric-value {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .metric-value.green { color: var(--green); }
+  .metric-value.magenta { color: var(--magenta); }
+  .metric-value.yellow { color: var(--yellow); }
+  .metric-value.cyan { color: var(--cyan); }
+
+  .metric-sub {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── COVERAGE BAR ── */
+  .coverage-bar-wrap {
+    background: var(--navy2);
+    border: 1px solid var(--navy3);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 28px;
+  }
+
+  .coverage-bar-label {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .coverage-bar {
+    height: 10px;
+    background: var(--navy3);
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .bar-commit { background: var(--green); border-radius: 5px 0 0 5px; }
+  .bar-upside { background: var(--magenta); }
+  .bar-pipeline { background: var(--slate); opacity: 0.4; border-radius: 0 5px 5px 0; }
+
+  .coverage-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  /* ── AE TABLE ── */
+  .ae-table-wrap {
+    background: var(--navy2);
+    border: 1px solid var(--navy3);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+
+  .ae-table-header {
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--navy3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ae-table-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.3px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    padding: 10px 20px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: right;
+    border-bottom: 1px solid var(--navy3);
+    background: var(--navy);
+  }
+
+  th:first-child { text-align: left; }
+
+  td {
+    padding: 14px 20px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(28,35,51,0.6);
+    text-align: right;
+    color: var(--text2);
+  }
+
+  td:first-child { text-align: left; color: var(--text); font-weight: 500; }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .total-row td {
+    background: var(--navy);
+    color: var(--text);
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    border-top: 1px solid var(--navy3);
+  }
+
+  .val-commit { color: var(--green); font-family: 'DM Mono', monospace; font-size: 12px; }
+  .val-upside { color: var(--magenta); font-family: 'DM Mono', monospace; font-size: 12px; }
+  .val-pipeline { color: var(--slate); font-family: 'DM Mono', monospace; font-size: 12px; }
+  .val-total { color: var(--cyan); font-family: 'DM Mono', monospace; font-size: 12px; }
+
+  .mini-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .mini-bar { height: 4px; border-radius: 2px; background: var(--navy3); width: 80px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; border-radius: 2px; background: var(--slate); }
+  .mini-bar-fill.high { background: var(--green); }
+  .mini-bar-fill.mid { background: var(--yellow); }
+
+  /* ── BIG DEALS ── */
+  .deals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .deal-card {
+    background: var(--navy2);
+    border: 1px solid var(--navy3);
+    border-radius: 8px;
+    padding: 16px 18px;
+    transition: border-color 0.2s;
+  }
+
+  .deal-card:hover { border-color: var(--text3); }
+
+  .deal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+
+  .deal-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .deal-acve {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--yellow);
+    white-space: nowrap;
+  }
+
+  .deal-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .deal-badge {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-commit { background: rgba(0,230,118,0.12); color: var(--green); border: 1px solid rgba(0,230,118,0.2); }
+  .badge-upside { background: rgba(233,30,144,0.12); color: var(--magenta); border: 1px solid rgba(233,30,144,0.2); }
+  .badge-pipeline { background: rgba(203,213,225,0.08); color: var(--slate); border: 1px solid rgba(203,213,225,0.15); }
+  .badge-q2 { background: rgba(255,214,0,0.1); color: var(--yellow); border: 1px solid rgba(255,214,0,0.2); }
+
+  .deal-owner { font-size: 11px; color: var(--text3); }
+  .deal-close { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+
+  /* ── LOADING / ERROR ── */
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    gap: 16px;
+  }
+
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--navy3);
+    border-top-color: var(--cyan);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  .loading-text {
+    font-size: 13px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+
+  .error-state {
+    background: var(--navy2);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 10px;
+    padding: 32px;
+    text-align: center;
+    color: var(--red);
+    font-size: 13px;
+    margin: 40px 0;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .section-badge {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: rgba(233,30,144,0.12);
+    color: var(--magenta);
+    border: 1px solid rgba(233,30,144,0.2);
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    letter-spacing: 0.3px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--navy);
+    border-top: 1px solid var(--navy3);
+    padding: 8px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 999;
+  }
+
+  .footer-left {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+
+  .footer-powered {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--cyan);
+    letter-spacing: 2px;
+  }
+
+  /* ── COMING SOON ── */
+  .coming-soon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 20px;
+    gap: 16px;
+    opacity: 0.5;
+  }
+
+  .coming-soon-icon { font-size: 40px; }
+  .coming-soon-text { font-size: 16px; font-weight: 600; color: var(--text2); }
+  .coming-soon-sub { font-size: 13px; color: var(--text3); }
+
+  /* ── QUOTA PROGRESS ── */
+  .quota-pct { font-family: 'DM Mono', monospace; font-size: 11px; }
+  .quota-pct.on-track { color: var(--green); }
+  .quota-pct.behind { color: var(--yellow); }
+  .quota-pct.at-risk { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="rainbow-bar"></div>
+
+<header>
+  <div class="wordmark">
+    <div class="wordmark-icon">E</div>
+    <div>
+      <div class="wordmark-text">ELTON COCKPIT</div>
+      <div class="wordmark-sub">CAI DISCRETE — BU INTELLIGENCE</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="last-updated" id="lastUpdated">LAST UPDATED <span>—</span></div>
+    <button class="refresh-btn" onclick="refreshData()" id="refreshBtn">
+      <span class="refresh-icon">↻</span> REFRESH
+    </button>
+    <div class="role-pill" id="rolePill">GM</div>
+  </div>
+</header>
+
+<nav id="mainNav">
+  <!-- populated by JS based on role -->
+</nav>
+
+<main>
+  <!-- GM Board -->
+  <div class="board-panel active" id="panel-gm">
+    <div class="board-tabs">
+      <div class="board-tab active" onclick="switchTab('gm','forecast')">Forecast</div>
+      <div class="board-tab" onclick="switchTab('gm','pipeline')">Pipeline</div>
+      <div class="board-tab" onclick="switchTab('gm','intelligence')" id="gmIntelTab">GM Intelligence <span style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;margin-left:4px;">SOON</span></div>
+    </div>
+
+    <div class="tab-content active" id="tab-gm-forecast">
+      <div id="forecastContent">
+        <div class="loading-state">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">PULLING LIVE DATA...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-gm-pipeline">
+      <div class="coming-soon">
+        <div class="coming-soon-icon">⬡</div>
+        <div class="coming-soon-text">Pipeline Deep Dive</div>
+        <div class="coming-soon-sub">Motion analysis, deal aging, territory health — coming next sprint</div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-gm-intelligence">
+      <div class="coming-soon">
+        <div class="coming-soon-icon">⬡</div>
+        <div class="coming-soon-text">GM Intelligence Cards</div>
+        <div class="coming-soon-sub">AI-generated BU insights, signals, and coaching — coming next sprint</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forecast Board (standalone nav item for direct access) -->
+  <div class="board-panel" id="panel-forecast">
+    <div id="forecastContentAlt">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">PULLING LIVE DATA...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sales Manager Board -->
+  <div class="board-panel" id="panel-manager">
+    <div class="coming-soon">
+      <div class="coming-soon-icon">⬡</div>
+      <div class="coming-soon-text">Sales Manager Board</div>
+      <div class="coming-soon-sub">Team performance, territory health, AE coaching — coming next sprint</div>
+    </div>
+  </div>
+
+  <!-- AE Boards (one per AE, shown based on ID) -->
+  <div class="board-panel" id="panel-ae">
+    <div class="coming-soon">
+      <div class="coming-soon-icon">⬡</div>
+      <div class="coming-soon-text">AE Board</div>
+      <div class="coming-soon-sub">Your deals, coaching cards, and territory intelligence — coming next sprint</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-left" id="dataFooter">DATA: LIVE · HUBSPOT + SP · REFRESHES EVERY 15 MIN</div>
+  <div class="footer-powered">✦ POWERED BY ELTON</div>
+</footer>
+
+<script>
+// ── ROLE CONFIG ───────────────────────────────────────────────────────────────
+const ROLES = {
+  chris:    { label: 'GM',       name: 'Chris Elliott',   panels: ['gm','forecast','manager','ae'], defaultPanel: 'gm' },
+  brent:    { label: 'CEO',      name: 'Brent Pietrzak',  panels: ['gm','forecast','manager','ae'], defaultPanel: 'gm' },
+  neil:     { label: 'VP Sales', name: 'Neil Battarbee',  panels: ['forecast','manager','ae'],       defaultPanel: 'manager', ownerId: '452219519' },
+  drew:     { label: 'AE',       name: 'Drew Siegel',     panels: ['ae'],                            defaultPanel: 'ae',      ownerId: '730668906' },
+  brett:    { label: 'AE',       name: 'Brett Frey',      panels: ['ae'],                            defaultPanel: 'ae',      ownerId: '87172609' },
+  tim:      { label: 'AE',       name: 'Tim Busekrus',    panels: ['ae'],                            defaultPanel: 'ae',      ownerId: '754222492' },
+  bridgette:{ label: 'AE',       name: 'Bridgette Bridges',panels: ['ae'],                           defaultPanel: 'ae',      ownerId: '86687817' },
+  patrick:  { label: 'AE',       name: 'Patrick Hofmann', panels: ['ae'],                            defaultPanel: 'ae',      ownerId: '90233713' },
+};
+
+const NAV_LABELS = {
+  gm:       'BU Overview',
+  forecast: 'Forecast',
+  manager:  'Sales Manager',
+  ae:       'My Board',
+};
+
+const SP_BASE = 'https://caisoft.sharepoint.com/sites/DM-Elton/Shared%20Documents/Boards/data';
+
+// ── OWNER MAP ─────────────────────────────────────────────────────────────────
+const OWNERS = {
+  '86687817':  { name: 'Bridgette B.',  quota: 373333  },
+  '87172609':  { name: 'Brett F.',      quota: 554375  },
+  '452219519': { name: 'Neil B.',       quota: 900000  },
+  '730668906': { name: 'Drew S.',       quota: 700000  },
+  '754222492': { name: 'Tim B.',        quota: 500000  },
+  '90233713':  { name: 'Patrick H.',    quota: 507500  },
+};
+
+const Q2_START = '2026-04-01';
+const Q2_END   = '2026-06-30';
+const Q2_TARGET = 748000;
+const H1_TARGET = 1460000;
+const Q1_ACTUAL = 530000;
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+let currentRole = null;
+let currentData = null;
+let autoRefreshInterval = null;
+
+function getRole() {
+  const params = new URLSearchParams(window.location.search);
+  const id = (params.get('id') || 'chris').toLowerCase();
+  return ROLES[id] || ROLES['chris'];
+}
+
+function buildNav(role) {
+  const nav = document.getElementById('mainNav');
+  nav.innerHTML = '';
+  role.panels.forEach((panel, i) => {
+    const item = document.createElement('div');
+    item.className = 'nav-item' + (panel === role.defaultPanel ? ' active' : '');
+    item.setAttribute('data-panel', panel);
+    item.onclick = () => switchPanel(panel);
+    if (panel === 'forecast' || panel === 'gm') {
+      item.innerHTML = `<span class="nav-dot"></span>${NAV_LABELS[panel]}`;
+    } else {
+      item.textContent = NAV_LABELS[panel];
+    }
+    nav.appendChild(item);
+    if (i < role.panels.length - 1) {
+      const sep = document.createElement('div');
+      sep.className = 'nav-separator';
+      nav.appendChild(sep);
+    }
+  });
+}
+
+function switchPanel(panelId) {
+  document.querySelectorAll('.board-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`panel-${panelId}`)?.classList.add('active');
+  document.querySelector(`[data-panel="${panelId}"]`)?.classList.add('active');
+}
+
+function switchTab(board, tab) {
+  document.querySelectorAll(`#panel-${board} .board-tab`).forEach(t => t.classList.remove('active'));
+  document.querySelectorAll(`#panel-${board} .tab-content`).forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(`tab-${board}-${tab}`)?.classList.add('active');
+}
+
+// ── DATA FETCH ────────────────────────────────────────────────────────────────
+async function fetchData() {
+  try {
+    const resp = await fetch(`${SP_BASE}/forecast_data.json?_=${Date.now()}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    currentData = data;
+    renderForecast(data);
+    updateLastUpdated(data.generated);
+  } catch (e) {
+    showError(e.message);
+  }
+}
+
+function updateLastUpdated(ts) {
+  const el = document.getElementById('lastUpdated');
+  if (ts) {
+    const d = new Date(ts);
+    const timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    el.innerHTML = `LAST UPDATED <span>${timeStr} ET</span>`;
+  }
+}
+
+async function refreshData() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  btn.disabled = true;
+  await fetchData();
+  setTimeout(() => {
+    btn.classList.remove('spinning');
+    btn.disabled = false;
+  }, 800);
+}
+
+function showError(msg) {
+  const html = `<div class="error-state">⚠ Unable to load data: ${msg}<br><small style="opacity:0.6;margin-top:8px;display:block;">Run the Board Data flow in Power Automate to generate fresh data, then refresh.</small></div>`;
+  document.getElementById('forecastContent').innerHTML = html;
+}
+
+// ── FORECAST RENDER ───────────────────────────────────────────────────────────
+function fmt(v) {
+  if (!v || v === 0) return '—';
+  if (v >= 1000000) return '$' + (v/1000000).toFixed(1) + 'M';
+  if (v >= 1000) return '$' + Math.round(v/1000) + 'K';
+  return '$' + Math.round(v);
+}
+
+function isQ2(closedate) {
+  return closedate >= Q2_START && closedate <= Q2_END;
+}
+
+function getFCLabel(fc) {
+  if (fc === 'Manager Forecasted') return 'commit';
+  if (fc === 'Manager Upside') return 'upside';
+  return 'pipeline';
+}
+
+function processDeals(deals) {
+  const byOwner = {};
+  Object.keys(OWNERS).forEach(id => {
+    byOwner[id] = { commit: 0, upside: 0, q2: 0, total: 0, bigDeals: [] };
+  });
+
+  (deals || []).forEach(deal => {
+    const p = deal.properties;
+    const ownerId = p.hubspot_owner_id;
+    if (!byOwner[ownerId]) return;
+    const acve = parseFloat(p.acve) || 0;
+    if (acve === 0) return;
+    const fc = p.mgr__forecast_category || '';
+    const closedate = (p.closedate || '').substring(0, 10);
+    const q2 = isQ2(closedate);
+    const label = getFCLabel(fc);
+
+    if (label === 'commit') byOwner[ownerId].commit += acve;
+    if (label === 'upside') byOwner[ownerId].upside += acve;
+    if (q2) byOwner[ownerId].q2 += acve;
+    byOwner[ownerId].total += acve;
+
+    if (acve >= 50000) {
+      byOwner[ownerId].bigDeals.push({
+        name: p.dealname,
+        acve,
+        closedate,
+        label,
+        q2,
+        owner: OWNERS[ownerId]?.name || ownerId
+      });
+    }
+  });
+
+  // Team totals
+  const totals = { commit: 0, upside: 0, q2: 0, total: 0 };
+  Object.values(byOwner).forEach(r => {
+    totals.commit += r.commit;
+    totals.upside += r.upside;
+    totals.q2 += r.q2;
+    totals.total += r.total;
+  });
+
+  // All big deals
+  const allBigDeals = [];
+  Object.values(byOwner).forEach(r => allBigDeals.push(...r.bigDeals));
+  allBigDeals.sort((a,b) => b.acve - a.acve);
+
+  return { byOwner, totals, allBigDeals };
+}
+
+function renderForecast(data) {
+  const { byOwner, totals, allBigDeals } = processDeals(data.deals);
+  const coverage = totals.q2 > 0 ? ((totals.commit + totals.upside) / totals.q2 * 100).toFixed(0) : 0;
+  const commitPct = Q2_TARGET > 0 ? (totals.commit / Q2_TARGET * 100).toFixed(0) : 0;
+
+  const barCommitW = Math.min((totals.commit / Q2_TARGET * 100), 100).toFixed(1);
+  const barUpsideW = Math.min((totals.upside / Q2_TARGET * 100), 60).toFixed(1);
+  const barPipeW = Math.min(((totals.q2 - totals.commit - totals.upside) / Q2_TARGET * 100), 80).toFixed(1);
+
+  // AE rows
+  const aeRows = Object.entries(OWNERS).map(([id, info]) => {
+    const r = byOwner[id] || { commit: 0, upside: 0, q2: 0, total: 0 };
+    const barW = totals.q2 > 0 ? Math.min((r.q2 / totals.q2 * 100), 100) : 0;
+    const barClass = barW > 30 ? 'high' : barW > 15 ? 'mid' : '';
+    const quotaPct = r.total > 0 ? (r.total / info.quota * 100).toFixed(0) : 0;
+    const pctClass = quotaPct > 100 ? 'on-track' : quotaPct > 60 ? 'behind' : 'at-risk';
+    return `
+      <tr>
+        <td>${info.name}</td>
+        <td class="val-commit">${fmt(r.commit)}</td>
+        <td class="val-upside">${fmt(r.upside)}</td>
+        <td class="val-pipeline">${fmt(r.q2)}</td>
+        <td class="val-total">${fmt(r.total)}</td>
+        <td><span class="quota-pct ${pctClass}">${quotaPct}%</span></td>
+        <td>
+          <div class="mini-bar-wrap">
+            <div class="mini-bar"><div class="mini-bar-fill ${barClass}" style="width:${barW}%"></div></div>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+
+  // Big deal cards
+  const dealCards = allBigDeals.slice(0, 12).map(d => `
+    <div class="deal-card">
+      <div class="deal-header">
+        <div class="deal-name">${d.name}</div>
+        <div class="deal-acve">${fmt(d.acve)}</div>
+      </div>
+      <div class="deal-meta">
+        <span class="deal-badge badge-${d.label}">${d.label.toUpperCase()}</span>
+        ${d.q2 ? '<span class="deal-badge badge-q2">Q2</span>' : ''}
+        <span class="deal-owner">${d.owner}</span>
+        ${d.closedate ? `<span class="deal-close">${d.closedate}</span>` : ''}
+      </div>
+    </div>`).join('');
+
+  const html = `
+    <div class="metric-grid">
+      <div class="metric-card green">
+        <div class="metric-label">MGR COMMIT</div>
+        <div class="metric-value green">${fmt(totals.commit)}</div>
+        <div class="metric-sub">${commitPct}% OF Q2 TARGET</div>
+      </div>
+      <div class="metric-card magenta">
+        <div class="metric-label">MGR UPSIDE</div>
+        <div class="metric-value magenta">${fmt(totals.upside)}</div>
+        <div class="metric-sub">BEST CASE: ${fmt(totals.commit + totals.upside)}</div>
+      </div>
+      <div class="metric-card yellow">
+        <div class="metric-label">Q2 PIPELINE</div>
+        <div class="metric-value yellow">${fmt(totals.q2)}</div>
+        <div class="metric-sub">TARGET: ${fmt(Q2_TARGET)}</div>
+      </div>
+      <div class="metric-card cyan">
+        <div class="metric-label">TOTAL OPEN</div>
+        <div class="metric-value cyan">${fmt(totals.total)}</div>
+        <div class="metric-sub">COVERAGE: ${coverage}%</div>
+      </div>
+    </div>
+
+    <div class="coverage-bar-wrap">
+      <div class="coverage-bar-label">
+        <span>Q2 COVERAGE vs TARGET (${fmt(Q2_TARGET)})</span>
+        <span style="color:var(--text2)">${coverage}% COVERED</span>
+      </div>
+      <div class="coverage-bar">
+        <div class="bar-commit" style="width:${barCommitW}%"></div>
+        <div class="bar-upside" style="width:${barUpsideW}%"></div>
+        <div class="bar-pipeline" style="width:${barPipeW}%"></div>
+      </div>
+      <div class="coverage-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Commit ${fmt(totals.commit)}</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--magenta)"></div>Upside ${fmt(totals.upside)}</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--slate);opacity:0.4"></div>Pipeline ${fmt(totals.q2 - totals.commit - totals.upside)}</div>
+      </div>
+    </div>
+
+    <div class="ae-table-wrap">
+      <div class="ae-table-header">
+        <div class="ae-table-title">AE BREAKDOWN — Q2 2026</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>AE</th>
+            <th>COMMIT</th>
+            <th>UPSIDE</th>
+            <th>Q2 PIPELINE</th>
+            <th>TOTAL OPEN</th>
+            <th>QUOTA CVG</th>
+            <th>Q2 SHARE</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${aeRows}
+          <tr class="total-row">
+            <td>TEAM TOTAL</td>
+            <td class="val-commit">${fmt(totals.commit)}</td>
+            <td class="val-upside">${fmt(totals.upside)}</td>
+            <td class="val-pipeline">${fmt(totals.q2)}</td>
+            <td class="val-total">${fmt(totals.total)}</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    ${allBigDeals.length > 0 ? `
+    <div class="section-header">
+      <span class="section-badge">BIG DEALS</span>
+      <span class="section-title">Q2 DEALS ≥ $50K ACVe</span>
+    </div>
+    <div class="deals-grid">${dealCards}</div>
+    ` : ''}
+  `;
+
+  document.getElementById('forecastContent').innerHTML = html;
+  if (document.getElementById('forecastContentAlt')) {
+    document.getElementById('forecastContentAlt').innerHTML = html;
+  }
+}
+
+// ── AUTO REFRESH (5AM–10PM ET, every 15 min) ─────────────────────────────────
+function isBusinessHours() {
+  const now = new Date();
+  const et = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  const h = et.getHours();
+  return h >= 5 && h < 22;
+}
+
+function startAutoRefresh() {
+  if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+  autoRefreshInterval = setInterval(() => {
+    if (isBusinessHours()) fetchData();
+  }, 15 * 60 * 1000);
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const roleId = (params.get('id') || 'chris').toLowerCase();
+  currentRole = ROLES[roleId] || ROLES['chris'];
+
+  document.getElementById('rolePill').textContent = currentRole.label + ' — ' + currentRole.name.split(' ')[0];
+  buildNav(currentRole);
+  switchPanel(currentRole.defaultPanel);
+  fetchData();
+  startAutoRefresh();
+});
+</script>
+</body>
+</html>
