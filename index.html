@@ -722,6 +722,9 @@
 </footer>
 
 <script>
+// ── EMBEDDED DATA (injected by PA flow) ──
+var EMBEDDED_DATA = null; // ELTON_DATA_PLACEHOLDER
+
 // ── ROLE CONFIG ───────────────────────────────────────────────────────────────
 const ROLES = {
   chris:    { label: 'GM',       name: 'Chris Elliott',   panels: ['gm','forecast','manager','ae'], defaultPanel: 'gm' },
@@ -809,12 +812,13 @@ function switchTab(board, tab) {
 // ── DATA FETCH ────────────────────────────────────────────────────────────────
 async function fetchData() {
   try {
-    const resp = await fetch(`${SP_BASE}/forecast_data.json?_=${Date.now()}`, { credentials: "include", mode: "cors" });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const data = await resp.json();
-    currentData = data;
-    renderForecast(data);
-    updateLastUpdated(data.generated);
+    if (typeof EMBEDDED_DATA !== 'undefined' && EMBEDDED_DATA) {
+      currentData = EMBEDDED_DATA;
+      renderForecast(EMBEDDED_DATA);
+      updateLastUpdated(EMBEDDED_DATA.generated);
+    } else {
+      showError('Data not yet available. Flow will refresh within 15 minutes.');
+    }
   } catch (e) {
     showError(e.message);
   }
