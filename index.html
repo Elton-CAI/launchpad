@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Launchpad Â· CAI Discrete</title>
+<title>Launchpad · CAI Discrete</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* Ã¢ÂÂÃ¢ÂÂ COCKPIT SHELL Ã¢ÂÂÃ¢ÂÂ */
@@ -222,7 +222,7 @@ tfoot td{background:#0D1117;color:#fff;font-weight:700;font-size:13px;padding:12
     <div class="wordmark-icon" style="width:48px;height:48px;min-width:48px;background:#F8FAFC;border:0.5px solid #E2E8F0;border-radius:10px;display:flex;align-items:center;justify-content:center;"><svg width="30" height="33" viewBox="0 0 30 33" fill="none"><path d="M15 2C15 2 23 7.5 23 18H7C7 7.5 15 2 15 2Z" fill="#F1F5F9" stroke="#E2E8F0" stroke-width="0.5"/><path d="M7 18L4 22H7V18Z" fill="#EF4444"/><path d="M23 18L26 22H23V18Z" fill="#EF4444"/><rect x="10" y="17" width="10" height="5" rx="1" fill="#CBD5E1"/><circle cx="15" cy="11" r="3.5" fill="#7DD3FC" stroke="#BAE6FD" stroke-width="0.5"/><circle cx="15" cy="11" r="2" fill="#38BDF8"/><circle cx="14" cy="10" r="0.7" fill="white" opacity="0.8"/><rect x="12" y="22" width="6" height="2" rx="0.5" fill="#94A3B8"/><path d="M12.5 24C12 26 10.5 29 10 31C11.5 30.5 13.5 30 15 30C16.5 30 18.5 30.5 20 31C19.5 29 18 26 17.5 24H12.5Z" fill="#F97316"/><path d="M13.5 24C13 26.5 13 28.5 13 30L15 29.5L17 30C17 28.5 17 26.5 16.5 24H13.5Z" fill="#FBBF24"/><path d="M14.3 24C14.1 26 14 28 14.2 29.8L15 29.5L15.8 29.8C16 28 15.9 26 15.7 24H14.3Z" fill="#FEF08A"/></svg></div>
     <div>
       <div class="wordmark-text" style="font-size:20px;color:#0F172A;letter-spacing:-0.01em;">Launch<span style="color:#0EA5E9;">pad</span></div>
-      <div class="wordmark-sub">CAI DISCRETE Ã¢ÂÂ BU INTELLIGENCE</div>
+      <div class="wordmark-sub">CAI DISCRETE · BU INTELLIGENCE</div>
     </div>
   </div>
   <div class="header-right">
@@ -558,20 +558,7 @@ function renderForecast(){
 
   const now=new Date();
   const ts=now.toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  set('tsBar','Data pulled from HubSpot ÃÂ· '+ts);
-
-  drawChart();renderAETable();renderDealTabs();buildChanges();buildLeaderboard('q2');
-}
-
-// Ã¢ÂÂÃ¢ÂÂ CHART Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
-function drawChart(){
-  const cv=document.getElementById('chart');if(!cv)return;
-  cv.width=cv.parentElement?cv.parentElement.clientWidth-40:1100;cv.height=260;
-  const ctx=cv.getContext('2d');
-  const W=cv.width,H=cv.height;
-  const pad={l:64,r:16,t:24,b:40};
-  const bA=H-pad.t-pad.b,sp=(W-pad.l-pad.r)/12,bW=sp*.68;
-  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  set('tsBar','Data pulled from HubSpot · Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const cw=Array(12).fill(0),cm=Array(12).fill(0),up=Array(12).fill(0),pp=Array(12).fill(0);
   won.forEach(d=>{if(!d.dt)return;const m=d.dt.getMonth();cw[m]+=d.acve;});
   open.forEach(d=>{
